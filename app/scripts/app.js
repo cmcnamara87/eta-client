@@ -47,9 +47,10 @@ angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.se
                             return Restangular.one('me/contacts', $stateParams.contactId).get();
                         },
                         eta: function(Restangular, $stateParams) {
+                            // @todo: make this real lat lon
                             return Restangular.all('me/locations').post({
-                                latitude: -27,
-                                longitude: -153
+                                latitude: -27.4673045983608,
+                                longitude: 153.0282677023206
                             }).then(function() {
                                 return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
                             });
