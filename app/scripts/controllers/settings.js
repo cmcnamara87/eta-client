@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('eta')
+angular.module('etaApp')
     .controller('SettingsCtrl', function($scope) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',

@@ -6,13 +6,13 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('eta', ['ionic', 'restangular', 'Test2.controllers', 'Test2.services']).run(function($ionicPlatform) {
+angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.services']).run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
         StatusBar.styleDefault();
     });
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    RestangularProvider.setBaseUrl('/api/index.php');
+    RestangularProvider.setBaseUrl('/eta/api/index.php');
 
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
@@ -29,12 +29,37 @@ angular.module('eta', ['ionic', 'restangular', 'Test2.controllers', 'Test2.servi
             views: {
                 'tab-contacts': {
                     resolve: {
-                        contacts: function() {
-                            // return Restangular.all('me/contacts').getList();
+                        contacts: function(Restangular) {
+                            return Restangular.all('me/contacts').getList();
                         }
                     },
                     templateUrl: 'templates/tab-contacts.html',
                     controller: 'ContactsCtrl'
+                }
+            }
+        })
+        .state('tab.contact-detail', {
+            url: '/contacts/:contactId',
+            views: {
+                'tab-contacts': {
+                    resolve: {
+                        contact: function(Restangular, $stateParams) {
+                            return Restangular.one('me/contacts', $stateParams.contactId).get();
+                        },
+                        eta: function(Restangular, $stateParams) {
+                            // @todo: make this real lat lon
+                            return Restangular.all('me/locations').post({
+                                latitude: -27.4673045983608,
+                                longitude: 153.0282677023206
+                            }).then(function() {
+                                return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
+                            });
+                            // $stateParams.location = {latitude:-27,longitude:-153};
+                            // return Restangular.one('me/contacts', $stateParams.contactId).get();
+                        }
+                    },
+                    templateUrl: 'templates/contact-detail.html',
+                    controller: 'ContactDetailCtrl'
                 }
             }
         })

@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('ContactsCtrl', function($scope, contacts) {
+    .controller('ContactDetailCtrl', function($scope, contact, eta) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
             'Karma'
         ];
-        $scope.contacts = contacts;
+        $scope.contact = contact;
+        $scope.eta = eta;
     });
