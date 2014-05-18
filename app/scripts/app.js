@@ -12,7 +12,7 @@ angular.module('eta', ['ionic', 'restangular', 'Test2.controllers', 'Test2.servi
     });
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    RestangularProvider.setBaseUrl('/api/index.php');
+    RestangularProvider.setBaseUrl('/eta/api/index.php');
 
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
@@ -29,8 +29,8 @@ angular.module('eta', ['ionic', 'restangular', 'Test2.controllers', 'Test2.servi
             views: {
                 'tab-contacts': {
                     resolve: {
-                        contacts: function() {
-                            // return Restangular.all('me/contacts').getList();
+                        contacts: function(Restangular) {
+                            return Restangular.all('me/contacts').getList();
                         }
                     },
                     templateUrl: 'templates/tab-contacts.html',

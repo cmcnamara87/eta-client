@@ -1,8 +1,8 @@
 <ion-view title="Contacts">
     <ion-content class="has-header">
         <ion-list>
-            <ion-item ng-repeat="friend in friends" type="item-text-wrap" href="#/tab/friend/{{friend.id}}">
-                {{friend.name}}
+            <ion-item ng-repeat="contact in contacts" type="item-text-wrap" href="#/tab/contact/{{contact.id}}">
+                {{contact.firstName}} {{contact.lastName}}
             </ion-item>
         </ion-list>
     </ion-content>
