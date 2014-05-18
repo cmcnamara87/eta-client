@@ -46,14 +46,16 @@ angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.se
                         contact: function(Restangular, $stateParams) {
                             return Restangular.one('me/contacts', $stateParams.contactId).get();
                         },
-                        eta: function(Restangular, $stateParams) {
-                            // @todo: make this real lat lon
-                            return Restangular.all('me/locations').post({
-                                latitude: -27.4673045983608,
-                                longitude: 153.0282677023206
-                            }).then(function() {
-                                return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
+                        eta: function(Restangular, $stateParams, Geo) {
+                            Geo.getLocation().then(function(position) {
+                                return Restangular.all('me/locations').post({
+                                    latitude: position.coords.latitude,
+                                    longitude: position.coords.longitude
+                                }).then(function() {
+                                    return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
+                                });
                             });
+
                             // $stateParams.location = {latitude:-27,longitude:-153};
                             // return Restangular.one('me/contacts', $stateParams.contactId).get();
                         }
