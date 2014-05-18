@@ -30,12 +30,25 @@ angular.module('eta', ['ionic', 'restangular', 'Test2.controllers', 'Test2.servi
                 'tab-contacts': {
                     resolve: {
                         contacts: function() {
-                            console.log('resolving contacts');
                             // return Restangular.all('me/contacts').getList();
                         }
                     },
                     templateUrl: 'templates/tab-contacts.html',
                     controller: 'ContactsCtrl'
+                }
+            }
+        })
+        .state('tab.settings', {
+            url: '/settings',
+            views: {
+                'tab-settings': {
+                    resolve: {
+                        profile: function() {
+                            // return Restangular.one('me/profile').get();
+                        }
+                    },
+                    templateUrl: 'templates/tab-settings.html',
+                    controller: 'SettingsCtrl'
                 }
             }
         })
