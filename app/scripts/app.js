@@ -38,6 +38,24 @@ angular.module('eta', ['ionic', 'restangular', 'Test2.controllers', 'Test2.servi
                 }
             }
         })
+        .state('tab.contact-detail', {
+            url: '/contacts/:contactId',
+            views: {
+                'tab-contacts': {
+                	resolve: {
+                        contact: function(Restangular, $stateParams) {
+                        	return Restangular.all('locations').post({latitude:-27,longitude:-153}).then(function(location) {
+                        		return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
+                        	});
+                        	// $stateParams.location = {latitude:-27,longitude:-153};
+                            // return Restangular.one('me/contacts', $stateParams.contactId).get();
+                        }
+                    },
+                    templateUrl: 'templates/contact-detail.html',
+                    controller: 'ContactDetailCtrl'
+                }
+            }
+        })
         .state('tab.settings', {
             url: '/settings',
             views: {
