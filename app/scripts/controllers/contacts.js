@@ -8,4 +8,9 @@ angular.module('etaApp')
             'Karma'
         ];
         $scope.contacts = contacts;
+        // Restangular.all('me/contacts').getList().then(function(contacts) {
+        //     $scope.contacts = contacts;
+        // });
+
+
     });
