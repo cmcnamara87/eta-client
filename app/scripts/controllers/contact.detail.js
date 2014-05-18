@@ -9,4 +9,5 @@ angular.module('etaApp')
         ];
         $scope.contact = contact;
         $scope.eta = eta;
+        console.log('contact eta', contact, eta);
     });

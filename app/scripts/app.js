@@ -6,14 +6,16 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.services']).run(function($ionicPlatform) {
+angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.services']).run(function($ionicPlatform, Geo) {
     $ionicPlatform.ready(function() {
-        StatusBar.styleDefault();
+        console.log('plugins', window.plugins);
+        Geo.startBackgroundLocation();
+        // StatusBar.styleDefault();
     });
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    RestangularProvider.setBaseUrl('/eta/api/index.php');
-
+    RestangularProvider.setBaseUrl('http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php');
+    // RestangularProvider.setBaseUrl('eta/api/index.php');
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
     // Set up the various states which the app can be in.
@@ -29,9 +31,14 @@ angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.se
             views: {
                 'tab-contacts': {
                     resolve: {
-                        contacts: function(Restangular) {
-                            return Restangular.all('me/contacts').getList();
-                        }
+                        contacts: ['Restangular',
+                            function(Restangular) {
+                                // return {};
+                                // console.log('testing!!!');
+
+                                return Restangular.all('me/contacts').getList();
+                            }
+                        ]
                     },
                     templateUrl: 'templates/tab-contacts.html',
                     controller: 'ContactsCtrl'
@@ -43,22 +50,23 @@ angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.se
             views: {
                 'tab-contacts': {
                     resolve: {
-                        contact: function(Restangular, $stateParams) {
-                            return Restangular.one('me/contacts', $stateParams.contactId).get();
-                        },
-                        eta: function(Restangular, $stateParams, Geo) {
-                            Geo.getLocation().then(function(position) {
-                                return Restangular.all('me/locations').post({
-                                    latitude: position.coords.latitude,
-                                    longitude: position.coords.longitude
-                                }).then(function() {
-                                    return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
+                        contact: ['Restangular', '$stateParams',
+                            function(Restangular, $stateParams) {
+                                return Restangular.one('me/contacts', $stateParams.contactId).get();
+                            }
+                        ],
+                        eta: ['Restangular', '$stateParams', 'Geo',
+                            function(Restangular, $stateParams, Geo) {
+                                return Geo.getLocation().then(function(position) {
+                                    return Restangular.all('me/locations').post({
+                                        latitude: position.coords.latitude,
+                                        longitude: position.coords.longitude
+                                    }).then(function() {
+                                        return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
+                                    });
                                 });
-                            });
-
-                            // $stateParams.location = {latitude:-27,longitude:-153};
-                            // return Restangular.one('me/contacts', $stateParams.contactId).get();
-                        }
+                            }
+                        ]
                     },
                     templateUrl: 'templates/contact-detail.html',
                     controller: 'ContactDetailCtrl'
