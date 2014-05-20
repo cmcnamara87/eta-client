@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .factory('Geo', function($q, Restangular, $ionicPopup) {
+    .factory('Geo', function($q, Restangular) {
         // Service logic
         // ...
 
@@ -25,10 +25,11 @@ angular.module('etaApp')
          * This callback will be executed every time a geolocation is recorded in the background.
          */
         var callbackFn = function(location) {
-            $ionicPopup.alert({
-                title: 'Got sig location change',
-                template: 'Okay'
-            });
+            // $ionicPopup.alert({
+            //     title: 'Got sig location change',
+            //     template: 'Okay'
+            // });
+
 
             Restangular.all('me/locations').post({
                 latitude: location.latitude,
@@ -69,8 +70,8 @@ angular.module('etaApp')
                     // },
 
                     desiredAccuracy: 10,
-                    stationaryRadius: 10,
-                    distanceFilter: 10,
+                    stationaryRadius: 20,
+                    distanceFilter: 30,
                     debug: true // <-- enable this hear sounds for background-geolocation life-cycle.
                 });
                 // $ionicPopup.alert({

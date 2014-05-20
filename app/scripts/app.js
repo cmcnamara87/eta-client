@@ -35,14 +35,14 @@ angular.module('etaApp', [
     RestangularProvider.addElementTransformer('users', true, function(user) {
         // This will add a method called login that will do a POST to the path login
         // signature is (name, operation, path, params, headers, elementToPost)
-
         user.addRestangularMethod('login', 'post', 'login');
-
+        user.addRestangularMethod('register', 'post', 'register');
+        user.addRestangularMethod('logout', 'post', 'logout');
         return user;
     });
 
-    // RestangularProvider.setBaseUrl('http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php');
-    RestangularProvider.setBaseUrl('eta/api/index.php');
+    RestangularProvider.setBaseUrl('http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php');
+    // RestangularProvider.setBaseUrl('eta/api/index.php');
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
     // Set up the various states which the app can be in.
@@ -62,16 +62,6 @@ angular.module('etaApp', [
             url: '/contacts',
             views: {
                 'tab-contacts': {
-                    resolve: {
-                        contacts: ['Restangular',
-                            function(Restangular) {
-                                // return {};
-                                // console.log('testing!!!');
-
-                                return Restangular.all('me/contacts').getList();
-                            }
-                        ]
-                    },
                     templateUrl: 'templates/tab-contacts.html',
                     controller: 'ContactsCtrl'
                 }
@@ -81,25 +71,6 @@ angular.module('etaApp', [
             url: '/contacts/:contactId',
             views: {
                 'tab-contacts': {
-                    resolve: {
-                        contact: ['Restangular', '$stateParams',
-                            function(Restangular, $stateParams) {
-                                return Restangular.one('me/contacts', $stateParams.contactId).get();
-                            }
-                        ],
-                        eta: ['Restangular', '$stateParams', 'Geo',
-                            function(Restangular, $stateParams, Geo) {
-                                return Geo.getLocation().then(function(position) {
-                                    return Restangular.all('me/locations').post({
-                                        latitude: position.coords.latitude,
-                                        longitude: position.coords.longitude
-                                    }).then(function() {
-                                        return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
-                                    });
-                                });
-                            }
-                        ]
-                    },
                     templateUrl: 'templates/contact-detail.html',
                     controller: 'ContactDetailCtrl'
                 }

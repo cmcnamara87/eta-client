@@ -6,7 +6,7 @@
 -->
 <ion-view title="{{contact.firstName}} {{contact.lastName}}">
     <ion-content has-header="true" padding="true">
-        <h1>{{contact.firstName}} {{contact.lastName}}</h1>
-        <h2>{{ eta.time }} minutes</h2>
+        <h1>{{ contact.name }}</h1>
+        <h2>{{ eta.time / 60 | number:0 }} minutes</h2>
     </ion-content>
 </ion-view>
