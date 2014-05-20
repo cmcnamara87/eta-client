@@ -6,21 +6,53 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.services']).run(function($ionicPlatform, Geo) {
+angular.module('etaApp', [
+    'ionic',
+    'restangular',
+    'http-auth-interceptor',
+    'Test2.controllers',
+    'Test2.services'
+]).run(function($ionicPlatform, Geo, $rootScope, $ionicModal) {
     $ionicPlatform.ready(function() {
         console.log('plugins', window.plugins);
         Geo.startBackgroundLocation();
         // StatusBar.styleDefault();
     });
+
+    $rootScope.$on('event:auth-loginRequired', function() {
+        // Show the sign in modal
+        $ionicModal.fromTemplateUrl('templates/signin.html', {
+            scope: $rootScope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $rootScope.modal = modal;
+            $rootScope.modal.show();
+        });
+    });
+
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
 
-    RestangularProvider.setBaseUrl('http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php');
-    // RestangularProvider.setBaseUrl('eta/api/index.php');
+    RestangularProvider.addElementTransformer('users', true, function(user) {
+        // This will add a method called login that will do a POST to the path login
+        // signature is (name, operation, path, params, headers, elementToPost)
+
+        user.addRestangularMethod('login', 'post', 'login');
+
+        return user;
+    });
+
+    // RestangularProvider.setBaseUrl('http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php');
+    RestangularProvider.setBaseUrl('eta/api/index.php');
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
     // Set up the various states which the app can be in.
     // Each state's controller can be found in controllers.js
     $stateProvider
+        .state('register', {
+            url: '/register',
+            templateUrl: 'templates/register.html',
+            controller: 'RegisterCtrl'
+        })
         .state('tab', {
             url: '/tab',
             abstract: true,
