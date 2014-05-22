@@ -72,7 +72,7 @@ angular.module('etaApp')
                     desiredAccuracy: 10,
                     stationaryRadius: 20,
                     distanceFilter: 30,
-                    debug: true // <-- enable this hear sounds for background-geolocation life-cycle.
+                    debug: false // <-- enable this hear sounds for background-geolocation life-cycle.
                 });
                 // $ionicPopup.alert({
                 //     title: 'Starting Geo',

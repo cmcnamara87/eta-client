@@ -16,7 +16,7 @@ angular.module('etaApp', [
     $ionicPlatform.ready(function() {
         console.log('plugins', window.plugins);
         Geo.startBackgroundLocation();
-        // StatusBar.styleDefault();
+        StatusBar.styleDefault();
     });
 
     $rootScope.$on('event:auth-loginRequired', function() {
