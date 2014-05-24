@@ -9,6 +9,7 @@
 angular.module('etaApp', [
     'ionic',
     'restangular',
+    'config',
     'http-auth-interceptor',
     'Test2.controllers',
     'Test2.services'
@@ -30,7 +31,7 @@ angular.module('etaApp', [
         });
     });
 
-}).config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
+}).config(function($stateProvider, $urlRouterProvider, RestangularProvider, ENV) {
 
     RestangularProvider.addElementTransformer('users', true, function(user) {
         // This will add a method called login that will do a POST to the path login
@@ -41,7 +42,7 @@ angular.module('etaApp', [
         return user;
     });
 
-    RestangularProvider.setBaseUrl('http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php');
+    RestangularProvider.setBaseUrl(ENV.baseUrl);
     // RestangularProvider.setBaseUrl('eta/api/index.php');
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
