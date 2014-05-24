@@ -34,7 +34,8 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ENV: {
-                        baseUrl: 'eta/api/index.php'
+                        baseUrl: 'eta/api/index.php',
+                        name: 'browser'
                     }
                 }
             },
@@ -45,7 +46,8 @@ module.exports = function(grunt) {
                 },
                 constants: {
                     ENV: {
-                        baseUrl: 'http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php'
+                        baseUrl: 'http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php',
+                        name: 'phone'
                     }
                 }
             }

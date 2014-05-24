@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('ContactDetailCtrl', function($scope, Restangular, $stateParams, Geo, $interval) {
+    .controller('ContactDetailCtrl', function($scope, Restangular, $stateParams, Geo, $interval, $timeout, $state) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -10,14 +10,18 @@ angular.module('etaApp')
         var UPDATE_POLL_TIME = 60000,
             countdownTimer, updateTimer;
 
-        function getEta() {
+        function getEta(isUpdate) {
             return Geo.getLocation().then(function(position) {
                 return Restangular.all('me/locations').post({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude
                 });
             }).then(function() {
-                return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get().then(function(eta) {
+                var params = {};
+                if (isUpdate) {
+                    params['update'] = true;
+                }
+                return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get(params).then(function(eta) {
                     // Got an ETA
 
                     // Cancel the current count down timer
@@ -46,9 +50,16 @@ angular.module('etaApp')
             // checks with the server for an updated eta
             updateTimer = $interval(function() {
                 console.log('Polling server');
-                getEta();
+                getEta(true);
             }, UPDATE_POLL_TIME);
 
-            return getEta();
+            return getEta(false);
         });
+
+        // Go back to contacts screen after 10 minutes
+        $timeout(function() {
+            // This is just to stop the polling in case someone leaves the app in the foreground
+            // and on this screen
+            $state.go('tab.contacts');
+        }, 600000);
     });
