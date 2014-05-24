@@ -7,3 +7,7 @@ app/bower_components
 coverage
 platforms
 plugins
+
+*.ipa
+
+*.ipa

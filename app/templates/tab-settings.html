@@ -1,5 +1,10 @@
 <ion-view title="Settings">
-  <ion-content class="has-header padding">
-    <h1>Settings</h1>
-  </ion-content>
+    <ion-content class="has-header padding">
+        <div class="padding">
+            <h3>{{ profile.name }}</h3>
+            <button class="button button-block button-positive" ng-click="signout()">
+                Sign Out
+            </button>
+        </div>
+    </ion-content>
 </ion-view>

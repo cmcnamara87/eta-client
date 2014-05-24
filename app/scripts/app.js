@@ -6,13 +6,40 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.services']).run(function($ionicPlatform, Geo) {
+angular.module('etaApp', [
+    'ionic',
+    'restangular',
+    'http-auth-interceptor',
+    'Test2.controllers',
+    'Test2.services'
+]).run(function($ionicPlatform, Geo, $rootScope, $ionicModal) {
     $ionicPlatform.ready(function() {
         console.log('plugins', window.plugins);
         Geo.startBackgroundLocation();
-        // StatusBar.styleDefault();
+        StatusBar.styleDefault();
     });
+
+    $rootScope.$on('event:auth-loginRequired', function() {
+        // Show the sign in modal
+        $ionicModal.fromTemplateUrl('templates/signin.html', {
+            scope: $rootScope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $rootScope.modal = modal;
+            $rootScope.modal.show();
+        });
+    });
+
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider) {
+
+    RestangularProvider.addElementTransformer('users', true, function(user) {
+        // This will add a method called login that will do a POST to the path login
+        // signature is (name, operation, path, params, headers, elementToPost)
+        user.addRestangularMethod('login', 'post', 'login');
+        user.addRestangularMethod('register', 'post', 'register');
+        user.addRestangularMethod('logout', 'post', 'logout');
+        return user;
+    });
 
     RestangularProvider.setBaseUrl('http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php');
     // RestangularProvider.setBaseUrl('eta/api/index.php');
@@ -21,6 +48,11 @@ angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.se
     // Set up the various states which the app can be in.
     // Each state's controller can be found in controllers.js
     $stateProvider
+        .state('register', {
+            url: '/register',
+            templateUrl: 'templates/register.html',
+            controller: 'RegisterCtrl'
+        })
         .state('tab', {
             url: '/tab',
             abstract: true,
@@ -30,16 +62,6 @@ angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.se
             url: '/contacts',
             views: {
                 'tab-contacts': {
-                    resolve: {
-                        contacts: ['Restangular',
-                            function(Restangular) {
-                                // return {};
-                                // console.log('testing!!!');
-
-                                return Restangular.all('me/contacts').getList();
-                            }
-                        ]
-                    },
                     templateUrl: 'templates/tab-contacts.html',
                     controller: 'ContactsCtrl'
                 }
@@ -49,25 +71,6 @@ angular.module('etaApp', ['ionic', 'restangular', 'Test2.controllers', 'Test2.se
             url: '/contacts/:contactId',
             views: {
                 'tab-contacts': {
-                    resolve: {
-                        contact: ['Restangular', '$stateParams',
-                            function(Restangular, $stateParams) {
-                                return Restangular.one('me/contacts', $stateParams.contactId).get();
-                            }
-                        ],
-                        eta: ['Restangular', '$stateParams', 'Geo',
-                            function(Restangular, $stateParams, Geo) {
-                                return Geo.getLocation().then(function(position) {
-                                    return Restangular.all('me/locations').post({
-                                        latitude: position.coords.latitude,
-                                        longitude: position.coords.longitude
-                                    }).then(function() {
-                                        return Restangular.one('me/contacts', $stateParams.contactId).one('eta').get();
-                                    });
-                                });
-                            }
-                        ]
-                    },
                     templateUrl: 'templates/contact-detail.html',
                     controller: 'ContactDetailCtrl'
                 }
