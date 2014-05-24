@@ -26,6 +26,31 @@ module.exports = function(grunt) {
             images: 'images'
         },
 
+        ngconstant: {
+            browser: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js',
+                    name: 'config',
+                },
+                constants: {
+                    ENV: {
+                        baseUrl: 'eta/api/index.php'
+                    }
+                }
+            },
+            phone: {
+                options: {
+                    dest: '<%= yeoman.app %>/scripts/config.js',
+                    name: 'config',
+                },
+                constants: {
+                    ENV: {
+                        baseUrl: 'http://ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com/eta/api/index.php'
+                    }
+                }
+            }
+        },
+
         // Watches files for changes and runs tasks based on the changed files
         watch: {
             js: {
@@ -63,19 +88,17 @@ module.exports = function(grunt) {
                 hostname: 'localhost',
                 livereload: 35729
             },
-            proxies: [
-                {
-                    context: '/eta/api',
-                    host: 'ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com'
-                    // port: 8080,
-                    // https: false,
-                    // changeOrigin: false,
-                    // xforward: false,
-                    // headers: {
-                        // "x-custom-added-header": value
-                    // }
-                }
-            ],
+            proxies: [{
+                context: '/eta/api',
+                host: 'ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com'
+                // port: 8080,
+                // https: false,
+                // changeOrigin: false,
+                // xforward: false,
+                // headers: {
+                // "x-custom-added-header": value
+                // }
+            }],
             livereload: {
                 options: {
                     open: true,
@@ -83,7 +106,7 @@ module.exports = function(grunt) {
                         '.tmp',
                         '<%= yeoman.app %>'
                     ],
-                    middleware: function (connect, options) {
+                    middleware: function(connect, options) {
                         if (!Array.isArray(options.base)) {
                             options.base = [options.base];
                         }
@@ -487,6 +510,7 @@ module.exports = function(grunt) {
 
         grunt.task.run([
             'clean:server',
+            'ngconstant:browser',
             'configureProxies',
             'bower-install',
             'concurrent:server',
@@ -507,6 +531,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'clean:dist',
         'bower-install',
+        'ngconstant:phone',
         'useminPrepare',
         'concurrent:dist',
         'autoprefixer',
