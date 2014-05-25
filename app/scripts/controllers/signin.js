@@ -1,7 +1,12 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('SignInCtrl', function($scope, Restangular, authService, Geo, $ionicLoading, $rootScope) {
+    .controller('SignInCtrl', function($scope, Restangular, authService, Geo, $ionicLoading, $rootScope, ENV) {
+
+        if (ENV.name === 'phone') {
+            analytics.trackView('Sign in');
+        }
+
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -13,10 +18,16 @@ angular.module('etaApp')
         $scope.goToSignin = function() {
             $scope.page = 'signin';
             $scope.isShowingBack = true;
+            if (ENV.name === 'phone') {
+                analytics.trackView('Sign in');
+            }
         };
         $scope.goToRegister = function() {
             $scope.page = 'register';
             $scope.isShowingBack = true;
+            if (ENV.name === 'phone') {
+                analytics.trackView('Register');
+            }
         };
         $scope.goBack = function() {
             $scope.page = 'landing';
@@ -25,6 +36,10 @@ angular.module('etaApp')
         $scope.user = {};
 
         $scope.register = function(user) {
+            if (ENV.name === 'phone') {
+                analytics.trackEvent('User', 'Registration', user.name);
+            }
+
             $scope.modal.hide();
 
             $ionicLoading.show({
@@ -41,6 +56,10 @@ angular.module('etaApp')
             });
         };
         $scope.signIn = function(user) {
+            if (ENV.name === 'phone') {
+                analytics.trackEvent('User', 'Manually sign in', user.name);
+            }
+
             $ionicLoading.show({
                 template: 'Loading...',
                 noBackdrop: false

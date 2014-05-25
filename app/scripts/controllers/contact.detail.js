@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('ContactDetailCtrl', function($scope, Restangular, $stateParams, Geo, $interval, $timeout, $state) {
+    .controller('ContactDetailCtrl', function($scope, Restangular, $stateParams, Geo, $interval, $timeout, $state, ENV) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
             'Karma'
         ];
-        var UPDATE_POLL_TIME = 60000,
+        var UPDATE_IN_SECONDS = 60,
             countdownTimer, updateTimer;
 
         function getEta(isUpdate) {
@@ -30,10 +30,21 @@ angular.module('etaApp')
                     // Update the eta
                     $scope.eta = eta;
 
+                    if (eta.movement === 'towards') {
+                        $scope.movement = 'on their way';
+                    } else if (eta.movement === 'away') {
+                        $scope.movement = 'going the opposite direction';
+                    } else if (eta.movement === 'stationary') {
+                        $scope.movement = 'standing still';
+                    }
+
+
                     // Start the timer again
-                    countdownTimer = $interval(function() {
-                        $scope.eta.time = $scope.eta.time - 1;
-                    }, 1000, $scope.eta.time);
+                    if (eta.movement === 'towards' && eta.time > 0) {
+                        countdownTimer = $interval(function() {
+                            $scope.eta.time = $scope.eta.time - 1;
+                        }, 1000, $scope.eta.time);
+                    }
                 });
             });
         }
@@ -45,13 +56,23 @@ angular.module('etaApp')
 
         Restangular.one('me/contacts', $stateParams.contactId).get().then(function(contact) {
             $scope.contact = contact;
+
+            // Send the track event
+            if (ENV.name === 'phone') {
+                analytics.trackEvent('ETA', 'View ETA', 'Viewed ' + contact.name, $stateParams.contactId);
+            }
         }).then(function() {
             // Start the update timer
             // checks with the server for an updated eta
+            $scope.updateIn = UPDATE_IN_SECONDS;
             updateTimer = $interval(function() {
-                console.log('Polling server');
-                getEta(true);
-            }, UPDATE_POLL_TIME);
+                $scope.updateIn--;
+                if ($scope.updateIn === 0) {
+                    console.log('Polling server');
+                    getEta(true);
+                    $scope.updateIn = UPDATE_IN_SECONDS;
+                }
+            }, 1000);
 
             return getEta(false);
         });

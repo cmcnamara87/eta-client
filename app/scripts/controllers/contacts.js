@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('ContactsCtrl', function($scope, Restangular, Geo) {
+    .controller('ContactsCtrl', function($scope, Restangular, Geo, ENV, $ionicPlatform) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -21,5 +21,13 @@ angular.module('etaApp')
                 });
             });
         });
+
+        $ionicPlatform.ready(function() {
+            if (ENV.name === 'phone') {
+                analytics.trackView('Contacts page');
+            }
+        });
+
+
 
     });

@@ -9,9 +9,10 @@
         <p style="text-align: center;">ETA</p>
         <h1 style="text-align: center;" ng-hide="eta">calculating...</h1>
         <h1 style="text-align: center;" ng-show="eta">
-            {{ minutes }}
-            <small>:{{ seconds }}</small>
+            {{ minutes }}:{{ seconds }}
         </h1>
+        <p ng-show="eta" style="text-align: center">Last seen {{ movement }} at {{ eta.lastSeenAt * 1000 | date:'h:m a'}}.</p>
+        <p ng-show="eta" style="text-align: center">Updating in {{ updateIn }} seconds.</p>
         <!-- <p style="text-align: center;">minutes</p> -->
     </ion-content>
 </ion-view>

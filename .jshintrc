@@ -21,6 +21,7 @@
     "sub": true,
     "globals": {
         "angular": false,
-        "StatusBar": false
+        "StatusBar": false,
+        "analytics": false
     }
 }

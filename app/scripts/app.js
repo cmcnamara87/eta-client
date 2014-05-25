@@ -20,8 +20,17 @@ angular.module('etaApp', [
         console.log('plugins', window.plugins);
         console.log('ENV IS', ENV.name);
 
+        if (ENV.name === 'phone') {
+            analytics.startTrackerWithId('UA-51312192-1');
+            // Get the current user
+            Restangular.one('me/profile').get().then(function(user) {
+                analytics.setUserId(user.id);
+            });
+        }
+
         Geo.startBackgroundLocation();
         Push.start();
+
         StatusBar.styleDefault();
     });
 
