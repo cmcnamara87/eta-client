@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('SignInCtrl', function($scope, Restangular, authService, Geo, $ionicLoading) {
+    .controller('SignInCtrl', function($scope, Restangular, authService, Geo, $ionicLoading, $rootScope) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -25,22 +25,19 @@ angular.module('etaApp')
         $scope.user = {};
 
         $scope.register = function(user) {
+            $scope.modal.hide();
+
             $ionicLoading.show({
                 template: 'Loading...',
                 noBackdrop: false
             });
-            $scope.modal.hide();
 
             Restangular.all('users').register(user).then(function() {
                 return Geo.getLocation();
-            }).then(function(position) {
-                return Restangular.all('me/locations').post({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                });
             }).then(function() {
                 $ionicLoading.hide();
                 authService.loginConfirmed();
+                $rootScope.isLoggedIn = true;
             });
         };
         $scope.signIn = function(user) {
@@ -53,6 +50,7 @@ angular.module('etaApp')
             Restangular.all('users').login(user).then(function() {
                 authService.loginConfirmed();
                 $ionicLoading.hide();
+                $rootScope.isLoggedIn = true;
             });
             // console.log('Sign-In', user);
         };

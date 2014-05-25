@@ -13,69 +13,32 @@ angular.module('etaApp', [
     'http-auth-interceptor',
     'Test2.controllers',
     'Test2.services'
-]).run(function($ionicPlatform, Geo, $rootScope, $ionicModal, ENV, Restangular) {
+]).run(function($ionicPlatform, Geo, $rootScope, $ionicModal, ENV, Restangular, Push) {
+    $rootScope.isLoggedIn = true;
+
     $ionicPlatform.ready(function() {
         console.log('plugins', window.plugins);
         console.log('ENV IS', ENV.name);
-        if (ENV.name === 'phone') {
-
-            // 6e6b76c68aff58dda654f669c008e78b45fc1f7c2dd5c935b06474eff12f1543
-            // 6e6b76c68aff58dda654f669c008e78b45fc1f7c2dd5c935b06474eff12f1543
-            console.log('setting up push notificaitons');
-            var pushNotification = window.plugins.pushNotification;
-
-            //set push notification callback before we initialize the plugin
-            document.addEventListener('push-notification', function(event) {
-                //get the notification payload
-                var notification = event.notification;
-
-                //display alert to the user for example
-                alert(notification.aps.alert);
-
-                //clear the app badge
-                pushNotification.setApplicationIconBadgeNumber(0);
-            });
-
-            //initialize the plugin
-            pushNotification.onDeviceReady({
-                pw_appid: "C9585-0582F"
-            });
-
-            console.log('about to register');
-            //register for pushes
-            pushNotification.registerDevice(
-                function(status) {
-                    console.log('=======REGISTERED DEIVCE=====', status['deviceToken']);
-                    var deviceToken = status['deviceToken'];
-                    console.warn('registerDevice: ' + deviceToken);
-                    Restangular.all('me/device').post({
-                        id: deviceToken
-                    });
-                },
-                function(status) {
-                    console.warn('failed to register : ' + JSON.stringify(status));
-                    alert(JSON.stringify(['failed to register ', status]));
-                }
-            );
-
-            //reset badges on app start
-            pushNotification.setApplicationIconBadgeNumber(0);
-        }
 
         Geo.startBackgroundLocation();
+        Push.start();
         StatusBar.styleDefault();
-
     });
 
     $rootScope.$on('event:auth-loginRequired', function() {
-        // Show the sign in modal
-        $ionicModal.fromTemplateUrl('templates/signin.html', {
-            scope: $rootScope,
-            animation: 'slide-in-up'
-        }).then(function(modal) {
-            $rootScope.modal = modal;
-            $rootScope.modal.show();
-        });
+
+        if ($rootScope.isLoggedIn) {
+            // Show the sign in modal
+            $ionicModal.fromTemplateUrl('templates/signin.html', {
+                scope: $rootScope,
+                animation: 'slide-in-up'
+            }).then(function(modal) {
+                $rootScope.modal = modal;
+                $rootScope.modal.show();
+            });
+        }
+        $rootScope.isLoggedIn = false;
+
     });
 
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider, ENV) {

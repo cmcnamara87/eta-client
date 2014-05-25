@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .factory('Geo', function($q, Restangular) {
+    .factory('Geo', function($q, Restangular, $rootScope) {
         // Service logic
         // ...
 
@@ -30,13 +30,16 @@ angular.module('etaApp')
             //     template: 'Okay'
             // });
 
-
-            Restangular.all('me/locations').post({
-                latitude: location.latitude,
-                longitude: location.longitude
-            }).then(function() {
+            if ($rootScope.isLoggedIn) {
+                Restangular.all('me/locations').post({
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                }).then(function() {
+                    bgGeo.finish();
+                });
+            } else {
                 bgGeo.finish();
-            });
+            }
             // console.log('[js] BackgroundGeoLocation callback:  ' + location.latitudue + ',' + location.longitude);
             // Do your HTTP request here to POST location to your server.
             //
