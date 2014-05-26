@@ -6,13 +6,40 @@
 -->
 <ion-view title="{{contact.name}}">
     <ion-content has-header="true" padding="true">
-        <p style="text-align: center;">ETA</p>
-        <h1 style="text-align: center;" ng-hide="eta">calculating...</h1>
-        <h1 style="text-align: center;" ng-show="eta">
-            {{ minutes }}:{{ seconds }}
+        <!-- <p style="text-align: center;">ETA</p> -->
+        <h1 style="text-align: center;" ng-hide="eta"><i class="icon ion-refreshing"></i>
         </h1>
-        <p ng-show="eta" style="text-align: center">Last seen {{ movement }} at {{ eta.lastSeenAt * 1000 | date:'h:m a'}}.</p>
-        <p ng-show="eta" style="text-align: center">Updating in {{ updateIn }} seconds.</p>
-        <!-- <p style="text-align: center;">minutes</p> -->
+
+        <div ng-show="eta">
+            <h1 style="text-align: center; font-size: 70px;">
+                {{ minutes }}:{{ seconds }}
+            </h1>
+            <p style="text-align: center;"><i class="icon ion-compass"></i> {{ movement }}</p>
+
+            <p style="text-align: center">
+                <i class="icon ion-eye"></i> Seen at {{ eta.lastSeenAt * 1000 | date:'h:mm a'}}
+            </p>
+            <!-- <p ng-show="eta" style="text-align: center"> {{ updateIn }}</p> -->
+            <!-- <p style="text-align: center;">minutes</p> -->
+
+
+        </div>
+        <!-- <div class="bar bar-footer bar-light">
+
+</div>
+ -->
+
     </ion-content>
+
+    <ion-footer-bar align-title="center" class="bar-light" ng-show="eta">
+        <!-- Updating in {{ updateIn }} seconds -->
+        <div class="buttons">
+            <!-- <button class="button">Left Button</button> -->
+        </div>
+        <h1 class="title" style="font-size: 14px;">Updating in {{ updateIn }} seconds.</h1>
+        <div class="buttons">
+            <!-- <button class="button">Right Button</button> -->
+        </div>
+    </ion-footer-bar>
+
 </ion-view>

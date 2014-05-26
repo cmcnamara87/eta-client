@@ -31,7 +31,8 @@ angular.module('etaApp', [
         Geo.startBackgroundLocation();
         Push.start();
 
-        StatusBar.styleDefault();
+        // StatusBar.styleDefault();
+        StatusBar.styleLightContent();
     });
 
     $rootScope.$on('event:auth-loginRequired', function() {

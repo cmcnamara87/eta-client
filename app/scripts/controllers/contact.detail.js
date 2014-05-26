@@ -8,7 +8,14 @@ angular.module('etaApp')
             'Karma'
         ];
         var UPDATE_IN_SECONDS = 60,
-            countdownTimer, updateTimer;
+            countdownTimer, updateTimer, tooLongTimer;
+
+        $scope.$on('$destroy', function() {
+            console.log('got a scope destroy!!!');
+            $interval.cancel(countdownTimer);
+            $interval.cancel(updateTimer);
+            $timeout.cancel(tooLongTimer);
+        });
 
         function getEta(isUpdate) {
             return Geo.getLocation().then(function(position) {
@@ -31,11 +38,11 @@ angular.module('etaApp')
                     $scope.eta = eta;
 
                     if (eta.movement === 'towards') {
-                        $scope.movement = 'on their way';
+                        $scope.movement = 'Heading towards you';
                     } else if (eta.movement === 'away') {
-                        $scope.movement = 'going the opposite direction';
+                        $scope.movement = 'Heading away from you';
                     } else if (eta.movement === 'stationary') {
-                        $scope.movement = 'standing still';
+                        $scope.movement = 'Standing still';
                     }
 
 
@@ -66,6 +73,7 @@ angular.module('etaApp')
             // checks with the server for an updated eta
             $scope.updateIn = UPDATE_IN_SECONDS;
             updateTimer = $interval(function() {
+                console.log('update timer running');
                 $scope.updateIn--;
                 if ($scope.updateIn === 0) {
                     console.log('Polling server');
@@ -78,7 +86,7 @@ angular.module('etaApp')
         });
 
         // Go back to contacts screen after 10 minutes
-        $timeout(function() {
+        tooLongTimer = $timeout(function() {
             // This is just to stop the polling in case someone leaves the app in the foreground
             // and on this screen
             $state.go('tab.contacts');

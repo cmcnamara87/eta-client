@@ -1,8 +1,12 @@
 <ion-view title="Contacts">
     <ion-content class="has-header">
         <ion-list>
-            <ion-item ng-repeat="contact in contacts" type="item-text-wrap" href="#/tab/contacts/{{contact.id}}">
+            <ion-item ng-repeat="contact in contacts" type="item-text-wrap" href="#/tab/contacts/{{contact.id}}" class="item-icon-left item-icon-right">
+                <i class="icon ion-ios7-location" ng-show="contact.nearby"></i>
+                <i class="icon ion-person" ng-hide="contact.nearby"></i>
                 {{ contact.name }}
+                <span ng-show="contact.nearby">- Nearby</span>
+                <i class="icon ion-chevron-right"></i>
             </ion-item>
         </ion-list>
     </ion-content>
