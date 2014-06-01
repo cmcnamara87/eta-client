@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('ContactsCtrl', function($scope, Contacts, Restangular, Geo, ENV, $ionicPlatform, $q, $state) {
+    .controller('ContactsCtrl', function($scope, Contacts, Restangular, Geo, ENV, $ionicPlatform, $q, $rootScope, $ionicLoading) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -13,9 +13,16 @@ angular.module('etaApp')
                 analytics.trackEvent('User', 'Sign out');
             }
 
+            $ionicLoading.show({
+                template: 'Signing out'
+            });
             Restangular.all('users').logout().then(function() {
+                $ionicLoading.hide();
                 Contacts.contacts = [];
-                $state.go('tab.contacts');
+
+                $rootScope.isLoggedIn = false;
+                $rootScope.modal.show();
+                // $state.go('tab.contacts');
             });
         };
 
@@ -34,13 +41,6 @@ angular.module('etaApp')
                 if (!found) {
                     $scope.contacts.push(contact);
                 }
-            });
-        }).then(function() {
-            return Geo.getLocation();
-        }).then(function(position) {
-            return Restangular.all('me/locations').post({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
             });
         }).then(function() {
             return getEtas();
@@ -63,15 +63,7 @@ angular.module('etaApp')
         $scope.refresh = function() {
             var requests = [];
 
-            var etas = Geo.getLocation().then(function(position) {
-                return Restangular.all('me/locations').post({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                });
-            }).then(function() {
-                return getEtas();
-            });
-            requests.push(etas);
+            requests.push(getEtas());
             requests.push(getPings());
             return $q.all(requests).
             finally(function() {
@@ -95,7 +87,14 @@ angular.module('etaApp')
         }
 
         function getEtas() {
-            return Restangular.all('me/contacts/etas').getList().then(function(etas) {
+            return Geo.getLocation().then(function(position) {
+                return Restangular.all('me/locations').post({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                });
+            }).then(function() {
+                return Restangular.all('me/contacts/etas').getList();
+            }).then(function(etas) {
                 angular.forEach($scope.contacts, function(contact) {
                     delete contact.eta;
                     angular.forEach(etas, function(eta) {

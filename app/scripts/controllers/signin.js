@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('SignInCtrl', function($scope, Restangular, authService, Geo, $ionicLoading, $rootScope, ENV) {
+    .controller('SignInCtrl', function($scope, Restangular, authService, Geo, $ionicLoading, $rootScope, $ionicPopup, ENV) {
 
         if (ENV.name === 'phone') {
             analytics.trackView('Sign in');
@@ -70,6 +70,12 @@ angular.module('etaApp')
                 authService.loginConfirmed();
                 $ionicLoading.hide();
                 $rootScope.isLoggedIn = true;
+            }, function() {
+                $ionicPopup.alert({
+                    title: 'Couldn\'t log in',
+                    template: 'Check your email and password are correct and try again.'
+                });
+                $scope.modal.show();
             });
             // console.log('Sign-In', user);
         };

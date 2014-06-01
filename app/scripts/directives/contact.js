@@ -25,7 +25,15 @@ angular.module('etaApp')
                     // alertPopup.then(function() {
                     //     console.log('Thank you for not eating my delicious ice cream cone');
                     // });
-                    Restangular.one('me/contacts', scope.contact.id).all('ping').post({});
+
+                    return Geo.getLocation().then(function(position) {
+                        return Restangular.all('me/locations').post({
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude
+                        });
+                    }).then(function() {
+                        return Restangular.one('me/contacts', scope.contact.id).all('ping').post({});
+                    });
                 }
 
                 // element.text('this is the contact directive');
