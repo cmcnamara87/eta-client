@@ -14,13 +14,18 @@ angular.module('etaApp')
          */
 
         function sendDeviceToken(token) {
+            // window.alert('Sending token' + token);
             if ($rootScope.isLoggedIn) {
+                // window.alert('Is logged in, sending now');
                 Restangular.all('me/device').post({
                     id: token
                 });
             } else {
+                // window.alert('Watching to be logged in');
                 $rootScope.$watch('isLoggedIn', function(isLoggedIn) {
+                    // window.alert('Is logged in changed');
                     if (isLoggedIn) {
+                        // window.alert('Logged in, sending now');
                         Restangular.all('me/device').post({
                             id: token
                         });
@@ -49,7 +54,7 @@ angular.module('etaApp')
                         var notification = event.notification;
 
                         //display alert to the user for example
-                        // window.alert(notification.aps.alert);
+                        // // window.alert(notification.aps.alert);
 
                         $ionicPopup.alert({
                             title: 'You got pinged!',
@@ -68,6 +73,7 @@ angular.module('etaApp')
 
                     //initialize the plugin
                     if (ionic.Platform.isAndroid()) {
+                        // window.alert('IS ANDROID');
                         pushNotification.onDeviceReady({
                             projectid: '481432854615',
                             appid: 'C9585-0582F'
@@ -82,11 +88,13 @@ angular.module('etaApp')
                     console.log('about to register');
                     //register for pushes
                     if (ionic.Platform.isAndroid()) {
+                        // window.alert('REGISTERING DEVICE');
                         pushNotification.registerDevice(
                             function(status) {
-                                // var pushToken = status;
-                                // console.warn('push token: ' + pushToken);
-                                sendDeviceToken(status);
+                                // window.alert('DEVICE IS', status);
+                                var pushToken = status;
+                                // window.alert('push token: ' + pushToken);
+                                sendDeviceToken(pushToken);
                                 // Restangular.all('me/device').post({
                                 //     id: status
                                 // });
@@ -108,7 +116,7 @@ angular.module('etaApp')
                             },
                             function(status) {
                                 console.warn('failed to register : ' + JSON.stringify(status));
-                                window.alert(JSON.stringify(['failed to register ', status]));
+                                // window.alert(JSON.stringify(['failed to register ', status]));
                             }
                         );
                     }

@@ -82,12 +82,11 @@ angular.module('etaApp')
 
         function getPings() {
             return Restangular.all('me/contacts/pings').getList().then(function(pings) {
-                angular.forEach(pings, function(ping) {
-                    // console.log('gling through the pings');
-                    angular.forEach($scope.contacts, function(contact) {
-                        // console.log('going through the contacts', contact.id, ping.contactId);
+                angular.forEach($scope.contacts, function(contact) {
+                    delete contact.ping;
+
+                    angular.forEach(pings, function(ping) {
                         if (contact.id === ping.contactId) {
-                            // console.log('updating the ping!!!');
                             contact.ping = ping;
                         }
                     });
@@ -97,8 +96,9 @@ angular.module('etaApp')
 
         function getEtas() {
             return Restangular.all('me/contacts/etas').getList().then(function(etas) {
-                angular.forEach(etas, function(eta) {
-                    angular.forEach($scope.contacts, function(contact) {
+                angular.forEach($scope.contacts, function(contact) {
+                    delete contact.eta;
+                    angular.forEach(etas, function(eta) {
                         if (contact.id === eta.contactId) {
                             contact.eta = eta;
                         }

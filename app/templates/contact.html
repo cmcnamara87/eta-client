@@ -1,7 +1,7 @@
 <ion-item type="item-text-wrap" class="item item-avatar">
     <img ng-src="{{ contact.image }}">
 
-    <span class="badge badge-stable" ng-class="{'badge-balanced': contact.eta.movement == 'towards', 'badge-calm': contact.eta.duration > 0 && contact.eta.movement == 'away'}" ng-show="contact.eta.status === 'online'" style="top: 25px;">
+    <span class="badge badge-stable" ng-class="{'badge-balanced': contact.eta.movement == 'towards', 'badge-calm': contact.eta.duration > 0 && contact.eta.movement == 'away'}" ng-show="contact.eta.status === 'online'" style="top: 25px; right:15px;">
         <eta-timer eta="contact.eta" contact-id="{{ contact.id }}"></eta-timer>
     </span>
 
