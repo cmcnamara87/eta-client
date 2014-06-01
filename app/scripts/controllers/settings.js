@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('SettingsCtrl', function($scope, Restangular, $state, ENV) {
+    .controller('SettingsCtrl', function($scope, Restangular, $state, ENV, Contacts) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -22,6 +22,7 @@ angular.module('etaApp')
             }
 
             Restangular.all('users').logout().then(function() {
+                Contacts.contacts = [];
                 $state.go('tab.contacts');
             });
         };

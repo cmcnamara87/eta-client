@@ -9,6 +9,7 @@
 angular.module('etaApp', [
     'ionic',
     'restangular',
+    'angularMoment',
     'config',
     'http-auth-interceptor',
     'Test2.controllers',
