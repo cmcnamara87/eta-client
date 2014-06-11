@@ -294,7 +294,7 @@ module.exports = function(grunt) {
                         '*.html',
                         'templates/**/*.html',
                         'fonts/*',
-                        'res/**/*'
+                        'res/*'
                     ]
                 }, {
                     expand: true,

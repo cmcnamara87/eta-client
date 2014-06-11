@@ -60,7 +60,17 @@ angular.module('etaApp', [
         user.addRestangularMethod('login', 'post', 'login');
         user.addRestangularMethod('register', 'post', 'register');
         user.addRestangularMethod('logout', 'post', 'logout');
+
+        user.addRestangularMethod('goof', 'post', 'goof');
         return user;
+    });
+    RestangularProvider.addElementTransformer('contacts', true, function(contact) {
+        // This will add a method called login that will do a POST to the path login
+        // signature is (name, operation, path, params, headers, elementToPost)
+        contact.addRestangularMethod('accept', 'post', 'accept');
+        contact.addRestangularMethod('reject', 'post', 'reject');
+        contact.addRestangularMethod('remove', 'post', 'remove');
+        return contact;
     });
 
     RestangularProvider.setBaseUrl(ENV.baseUrl);
@@ -86,6 +96,24 @@ angular.module('etaApp', [
                 'tab-contacts': {
                     templateUrl: 'templates/tab-contacts.html',
                     controller: 'ContactsCtrl'
+                }
+            }
+        })
+        .state('tab.contacts-find', {
+            url: '/contacts/find',
+            views: {
+                'tab-contacts': {
+                    templateUrl: 'templates/contacts-find.html',
+                    controller: 'ContactsFindCtrl'
+                }
+            }
+        })
+        .state('tab.contacts-findbyname', {
+            url: '/contacts/find-by-name',
+            views: {
+                'tab-contacts': {
+                    templateUrl: 'templates/contacts-findbyname.html',
+                    controller: 'ContactsFindByNameCtrl'
                 }
             }
         })
