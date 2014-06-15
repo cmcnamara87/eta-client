@@ -10,8 +10,11 @@
             <div class="item item-avatar item-button-right" ng-repeat="user in users">
                 <img ng-src="{{ user.image }}" alt="{{ user.name }}">
                 <h2>{{ user.name }}</h2>
-                <button class="button button-positive" ng-click="addFriend(user)">
+                <button class="button button-positive" ng-click="addFriend(user)" ng-hide="user.status">
                     <i class="icon ion-plus-round"></i>
+                </button>
+                <button class="button button-light" ng-show="user.status">
+                    <i class="icon ion-checkmark"></i>
                 </button>
                 <p>Brisbane, Australia</p>
             </div>

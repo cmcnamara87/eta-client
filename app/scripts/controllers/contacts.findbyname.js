@@ -19,5 +19,6 @@ angular.module('etaApp')
 
         $scope.addFriend = function(user) {
             user.request();
+            user.status = 'requested';
         };
     });

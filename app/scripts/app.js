@@ -60,6 +60,7 @@ angular.module('etaApp', [
         user.addRestangularMethod('login', 'post', 'login');
         user.addRestangularMethod('register', 'post', 'register');
         user.addRestangularMethod('logout', 'post', 'logout');
+        user.addRestangularMethod('request', 'post', 'request');
         return user;
     });
     RestangularProvider.addElementTransformer('contacts', false, function(contact) {
