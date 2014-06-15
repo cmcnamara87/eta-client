@@ -54,17 +54,15 @@ angular.module('etaApp', [
 
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider, ENV) {
 
-    RestangularProvider.addElementTransformer('users', true, function(user) {
+    RestangularProvider.addElementTransformer('users', false, function(user) {
         // This will add a method called login that will do a POST to the path login
         // signature is (name, operation, path, params, headers, elementToPost)
         user.addRestangularMethod('login', 'post', 'login');
         user.addRestangularMethod('register', 'post', 'register');
         user.addRestangularMethod('logout', 'post', 'logout');
-
-        user.addRestangularMethod('goof', 'post', 'goof');
         return user;
     });
-    RestangularProvider.addElementTransformer('contacts', true, function(contact) {
+    RestangularProvider.addElementTransformer('contacts', false, function(contact) {
         // This will add a method called login that will do a POST to the path login
         // signature is (name, operation, path, params, headers, elementToPost)
         contact.addRestangularMethod('accept', 'post', 'accept');

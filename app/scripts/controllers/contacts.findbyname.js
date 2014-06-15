@@ -18,6 +18,6 @@ angular.module('etaApp')
         };
 
         $scope.addFriend = function(user) {
-            user.all('request').post({});
+            user.request();
         };
     });
