@@ -26,9 +26,15 @@
             <ion-item ng-hide="contacts.requested.length">
                 No requests.
             </ion-item>
-            <ion-item ng-repeat="contact in contacts.requested" class="item item-avatar">
+            <ion-item ng-repeat="contact in contacts.requested" class="item item-avatar item-button-right">
                 <img ng-src="{{ contact.image }}">
                 <h2>{{ contact.name }}</h2>
+                <button class="button button-positive" ng-click="accept(contact)" style="right: 63px;">
+                    <i class="icon ion-checkmark"></i>
+                </button>
+                <button class="button button-positive" ng-click="reject(contact)">
+                    <i class="icon ion-close"></i>
+                </button>
                 <p>Brisbane, Australia</p>
             </ion-item>
         </ion-list>
