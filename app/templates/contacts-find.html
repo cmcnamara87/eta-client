@@ -1,0 +1,42 @@
+<!--
+  This template loads for the 'tab.friend-detail' state (app.js)
+  'firend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
+  The FriendsCtrl pulls data from the Friends service (service.js)
+  The Friends service returns an array of friend data
+-->
+<ion-view title="Add Contacts">
+    <ion-content has-header="true">
+        <h1>Find Contacts</h1>
+        <ion-list>
+            <!--<ion-item>
+                <i class="ion-social-facebook"></i> Find Friends from Facebook
+            </ion-item>
+            <ion-item>
+                <i class="ion-social-twitter"></i> Find Friends from Twitter
+            </ion-item>
+            <ion-item>
+                <i class="ion-person-stalker"></i> Find Friends from Contacts
+            </ion-item>-->
+            <ion-item ui-sref="tab.contacts-findbyname">
+                <i class="ion-search"></i> Search by name
+            </ion-item>
+        </ion-list>
+        <h1>Contact Requests</h1>
+        <ion-list>
+            <ion-item ng-hide="contacts.requested.length">
+                No requests.
+            </ion-item>
+            <ion-item ng-repeat="contact in contacts.requested" class="item item-avatar item-button-right">
+                <img ng-src="{{ contact.image }}">
+                <h2>{{ contact.name }}</h2>
+                <button class="button button-positive" ng-click="accept(contact)" style="right: 63px;">
+                    <i class="icon ion-checkmark"></i>
+                </button>
+                <button class="button button-positive" ng-click="reject(contact)">
+                    <i class="icon ion-close"></i>
+                </button>
+                <p>Brisbane, Australia</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

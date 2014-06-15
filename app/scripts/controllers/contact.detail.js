@@ -1,14 +1,21 @@
 'use strict';
 
 angular.module('etaApp')
-    .controller('ContactDetailCtrl', function($scope, Restangular, $stateParams, Geo, $interval, $timeout, $state) {
+    .controller('ContactDetailCtrl', function($scope, Restangular, $stateParams, Geo, $interval, $timeout, $state, ENV) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
             'Karma'
         ];
-        var UPDATE_POLL_TIME = 60000,
-            countdownTimer, updateTimer;
+        var UPDATE_IN_SECONDS = 60,
+            countdownTimer, updateTimer, tooLongTimer;
+
+        $scope.$on('$destroy', function() {
+            console.log('got a scope destroy!!!');
+            $interval.cancel(countdownTimer);
+            $interval.cancel(updateTimer);
+            $timeout.cancel(tooLongTimer);
+        });
 
         function getEta(isUpdate) {
             return Geo.getLocation().then(function(position) {
@@ -30,10 +37,21 @@ angular.module('etaApp')
                     // Update the eta
                     $scope.eta = eta;
 
+                    if (eta.movement === 'towards') {
+                        $scope.movement = 'Heading towards you';
+                    } else if (eta.movement === 'away') {
+                        $scope.movement = 'Heading away from you';
+                    } else if (eta.movement === 'stationary') {
+                        $scope.movement = 'Standing still';
+                    }
+
+
                     // Start the timer again
-                    countdownTimer = $interval(function() {
-                        $scope.eta.time = $scope.eta.time - 1;
-                    }, 1000, $scope.eta.time);
+                    if (eta.movement === 'towards' && eta.time > 0) {
+                        countdownTimer = $interval(function() {
+                            $scope.eta.time = $scope.eta.time - 1;
+                        }, 1000, $scope.eta.time);
+                    }
                 });
             });
         }
@@ -45,19 +63,30 @@ angular.module('etaApp')
 
         Restangular.one('me/contacts', $stateParams.contactId).get().then(function(contact) {
             $scope.contact = contact;
+
+            // Send the track event
+            if (ENV.name === 'phone') {
+                analytics.trackEvent('ETA', 'View ETA', 'Viewed ' + contact.name, $stateParams.contactId);
+            }
         }).then(function() {
             // Start the update timer
             // checks with the server for an updated eta
+            $scope.updateIn = UPDATE_IN_SECONDS;
             updateTimer = $interval(function() {
-                console.log('Polling server');
-                getEta(true);
-            }, UPDATE_POLL_TIME);
+                console.log('update timer running');
+                $scope.updateIn--;
+                if ($scope.updateIn === 0) {
+                    console.log('Polling server');
+                    getEta(true);
+                    $scope.updateIn = UPDATE_IN_SECONDS;
+                }
+            }, 1000);
 
             return getEta(false);
         });
 
         // Go back to contacts screen after 10 minutes
-        $timeout(function() {
+        tooLongTimer = $timeout(function() {
             // This is just to stop the polling in case someone leaves the app in the foreground
             // and on this screen
             $state.go('tab.contacts');

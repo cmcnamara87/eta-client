@@ -1,0 +1,30 @@
+<ion-item type="item-text-wrap" class="item item-avatar">
+    <img ng-src="{{ contact.image }}">
+
+    <span class="badge badge-stable" ng-class="{'badge-balanced': contact.eta.movement == 'towards', 'badge-calm': contact.eta.duration > 0 && contact.eta.movement == 'away'}" ng-show="contact.eta.status === 'online'" style="top: 25px; right:15px;">
+        <eta-timer eta="contact.eta" contact-id="{{ contact.id }}"></eta-timer>
+    </span>
+
+    <h2>{{ contact.name }}</h2>
+    <p>
+        <!-- Standing still since {{ contact.eta.lastSeen * 1000 | amCalendar }} -->
+        <span ng-show="contact.eta.status === 'online'">
+            <span>
+                <span style="display: inline-block; height: 7px; width: 7px; background-color: #B8F191;border-radius: 7px;margin-right: 1px;position: relative;top: -2px;"></span>
+            </span>
+            <span am-time-ago="contact.eta.lastSeen" am-preprocess="unix"></span>
+        </span>
+        <span ng-show="contact.eta.status === 'offline'">
+            <span>Seen</span>
+            <span am-time-ago="contact.eta.lastSeen" am-preprocess="unix"></span>
+        </span>
+    </p>
+
+    <button ng-click="openPing(contact.ping)" ng-show="contact.ping" class="button button-positive" style="width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow:hidden;">
+        {{ contact.ping.address }}
+    </button>
+    <p ng-show="contact.ping" style="margin-top: 5px; color: #ddd;">
+        <span am-time-ago="contact.ping.created" am-preprocess="unix"></span>
+    </p>
+
+</ion-item>

@@ -22,7 +22,7 @@
     <!-- 
       The nav bar that will be updated as we navigate between views.
     -->
-    <ion-nav-bar class="bar-stable nav-title-slide-ios7">
+    <ion-nav-bar class="bar-assertive nav-title-slide-ios7">
         <ion-nav-back-button class="button-icon icon ion-chevron-left">
             Back
         </ion-nav-back-button>
@@ -46,6 +46,8 @@
     <script src="bower_components/lodash/dist/lodash.compat.js"></script>
     <script src="bower_components/restangular/dist/restangular.js"></script>
     <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -59,6 +61,12 @@
     <script src="scripts/controllers/contact.detail.js"></script>
     <script src="scripts/services/geo.js"></script>
     <script src="scripts/controllers/signin.js"></script>
+    <script src="scripts/services/push.js"></script>
+    <script src="scripts/directives/etatimer.js"></script>
+    <script src="scripts/services/contacts.js"></script>
+    <script src="scripts/directives/contact.js"></script>
+    <script src="scripts/controllers/contacts.find.js"></script>
+    <script src="scripts/controllers/contacts.findbyname.js"></script>
     <!-- endbuild -->
 
     <!-- cordova script (this will be a 404 during development) -->

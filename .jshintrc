@@ -18,8 +18,11 @@
     "strict": true,
     "trailing": true,
     "smarttabs": true,
+    "sub": true,
     "globals": {
         "angular": false,
-        "StatusBar": false
+        "StatusBar": false,
+        "analytics": false,
+        "ionic": false
     }
 }

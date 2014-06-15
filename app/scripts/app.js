@@ -9,84 +9,67 @@
 angular.module('etaApp', [
     'ionic',
     'restangular',
+    'angularMoment',
     'config',
     'http-auth-interceptor',
     'Test2.controllers',
     'Test2.services'
-]).run(function($ionicPlatform, Geo, $rootScope, $ionicModal, ENV, Restangular) {
+]).run(function($ionicPlatform, Geo, $rootScope, $ionicModal, ENV, Restangular, Push) {
+    $rootScope.isLoggedIn = true;
+
     $ionicPlatform.ready(function() {
         console.log('plugins', window.plugins);
         console.log('ENV IS', ENV.name);
+
         if (ENV.name === 'phone') {
-
-            // 6e6b76c68aff58dda654f669c008e78b45fc1f7c2dd5c935b06474eff12f1543
-            // 6e6b76c68aff58dda654f669c008e78b45fc1f7c2dd5c935b06474eff12f1543
-            console.log('setting up push notificaitons');
-            var pushNotification = window.plugins.pushNotification;
-
-            //set push notification callback before we initialize the plugin
-            document.addEventListener('push-notification', function(event) {
-                //get the notification payload
-                var notification = event.notification;
-
-                //display alert to the user for example
-                alert(notification.aps.alert);
-
-                //clear the app badge
-                pushNotification.setApplicationIconBadgeNumber(0);
+            analytics.startTrackerWithId('UA-51312192-1');
+            // Get the current user
+            Restangular.one('me/profile').get().then(function(user) {
+                analytics.setUserId(user.id);
             });
-
-            //initialize the plugin
-            pushNotification.onDeviceReady({
-                pw_appid: "C9585-0582F"
-            });
-
-            console.log('about to register');
-            //register for pushes
-            pushNotification.registerDevice(
-                function(status) {
-                    console.log('=======REGISTERED DEIVCE=====', status['deviceToken']);
-                    var deviceToken = status['deviceToken'];
-                    console.warn('registerDevice: ' + deviceToken);
-                    Restangular.all('me/device').post({
-                        id: deviceToken
-                    });
-                },
-                function(status) {
-                    console.warn('failed to register : ' + JSON.stringify(status));
-                    alert(JSON.stringify(['failed to register ', status]));
-                }
-            );
-
-            //reset badges on app start
-            pushNotification.setApplicationIconBadgeNumber(0);
         }
 
         Geo.startBackgroundLocation();
-        StatusBar.styleDefault();
+        Push.start();
 
+        // StatusBar.styleDefault();
+        StatusBar.styleLightContent();
     });
 
     $rootScope.$on('event:auth-loginRequired', function() {
-        // Show the sign in modal
-        $ionicModal.fromTemplateUrl('templates/signin.html', {
-            scope: $rootScope,
-            animation: 'slide-in-up'
-        }).then(function(modal) {
-            $rootScope.modal = modal;
-            $rootScope.modal.show();
-        });
+
+        if ($rootScope.isLoggedIn) {
+            // Show the sign in modal
+            $ionicModal.fromTemplateUrl('templates/signin.html', {
+                scope: $rootScope,
+                animation: 'slide-in-up'
+            }).then(function(modal) {
+                $rootScope.modal = modal;
+                $rootScope.modal.show();
+            });
+        }
+        $rootScope.isLoggedIn = false;
+
     });
 
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider, ENV) {
 
-    RestangularProvider.addElementTransformer('users', true, function(user) {
+    RestangularProvider.addElementTransformer('users', false, function(user) {
         // This will add a method called login that will do a POST to the path login
         // signature is (name, operation, path, params, headers, elementToPost)
         user.addRestangularMethod('login', 'post', 'login');
         user.addRestangularMethod('register', 'post', 'register');
         user.addRestangularMethod('logout', 'post', 'logout');
+        user.addRestangularMethod('request', 'post', 'request');
         return user;
+    });
+    RestangularProvider.addElementTransformer('contacts', false, function(contact) {
+        // This will add a method called login that will do a POST to the path login
+        // signature is (name, operation, path, params, headers, elementToPost)
+        contact.addRestangularMethod('accept', 'post', 'accept');
+        contact.addRestangularMethod('reject', 'post', 'reject');
+        contact.addRestangularMethod('remove', 'post', 'remove');
+        return contact;
     });
 
     RestangularProvider.setBaseUrl(ENV.baseUrl);
@@ -112,6 +95,24 @@ angular.module('etaApp', [
                 'tab-contacts': {
                     templateUrl: 'templates/tab-contacts.html',
                     controller: 'ContactsCtrl'
+                }
+            }
+        })
+        .state('tab.contacts-find', {
+            url: '/contacts/find',
+            views: {
+                'tab-contacts': {
+                    templateUrl: 'templates/contacts-find.html',
+                    controller: 'ContactsFindCtrl'
+                }
+            }
+        })
+        .state('tab.contacts-findbyname', {
+            url: '/contacts/find-by-name',
+            views: {
+                'tab-contacts': {
+                    templateUrl: 'templates/contacts-findbyname.html',
+                    controller: 'ContactsFindByNameCtrl'
                 }
             }
         })

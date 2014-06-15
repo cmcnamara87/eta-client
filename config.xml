@@ -8,6 +8,8 @@
         Apache Cordova Team
     </author>
     <content src="index.html" />
+    <access origin="*.ec2-54-206-66-123.ap-southeast-2.compute.amazonaws.com" />
+    <access origin="*.gravatar.com" />
     <access origin="*" />
 
     <!-- <preference name="webviewbounce" value="false" />
