@@ -8,28 +8,11 @@ angular.module('etaApp')
             'Karma'
         ];
 
-        $scope.signout = function() {
-            if (ENV.name === 'phone') {
-                analytics.trackEvent('User', 'Sign out');
-            }
-
-            $ionicLoading.show({
-                template: 'Signing out'
-            });
-            Restangular.all('users').logout().then(function() {
-                $ionicLoading.hide();
-                Contacts.contacts = [];
-
-                $rootScope.isLoggedIn = false;
-                $rootScope.modal.show();
-                // $state.go('tab.contacts');
-            });
-        };
-
-
         $scope.contacts = (Contacts.contacts = Contacts.contacts || []);
 
-        Restangular.all('me/contacts').getList().then(function(contacts) {
+        Restangular.all('me/contacts').getList({
+            type: 'accepted'
+        }).then(function(contacts) {
             // Contacts.contacts = contacts;
             angular.forEach(contacts, function(contact) {
                 var found = false;
@@ -105,6 +88,24 @@ angular.module('etaApp')
                 });
             });
         }
+
+        $scope.signout = function() {
+            if (ENV.name === 'phone') {
+                analytics.trackEvent('User', 'Sign out');
+            }
+
+            $ionicLoading.show({
+                template: 'Signing out'
+            });
+            Restangular.all('users').logout().then(function() {
+                $ionicLoading.hide();
+                Contacts.contacts = [];
+
+                $rootScope.isLoggedIn = false;
+                $rootScope.modal.show();
+                // $state.go('tab.contacts');
+            });
+        };
         // $scope.ping = function(contact) {
         //     var confirmPopup = $ionicPopup.confirm({
         //         title: 'Ping',
