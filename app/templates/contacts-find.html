@@ -6,7 +6,7 @@
 -->
 <ion-view title="Add Contacts">
     <ion-content has-header="true">
-        <h1>Find Friends</h1>
+        <h1>Find Contacts</h1>
         <ion-list>
             <!--<ion-item>
                 <i class="ion-social-facebook"></i> Find Friends from Facebook
@@ -21,13 +21,15 @@
                 <i class="ion-search"></i> Search by name
             </ion-item>
         </ion-list>
-        <h1>Friend Requests</h1>
+        <h1>Contact Requests</h1>
         <ion-list>
-            <ion-item ng-hide="awesomeThings.length">
-                No friend requests.
+            <ion-item ng-hide="contacts.requested.length">
+                No requests.
             </ion-item>
-            <ion-item ng-repeat="item in awesomeThings">
-                Hello, {{item}}!
+            <ion-item ng-repeat="contact in contacts.requested" class="item item-avatar">
+                <img ng-src="{{ contact.image }}">
+                <h2>{{ contact.name }}</h2>
+                <p>Brisbane, Australia</p>
             </ion-item>
         </ion-list>
     </ion-content>
