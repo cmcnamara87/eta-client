@@ -72,8 +72,8 @@ angular.module('etaApp')
                     //     foo: 'bar'
                     // },
 
-                    desiredAccuracy: 100,
-                    stationaryRadius: 30,
+                    desiredAccuracy: 1000,
+                    stationaryRadius: 20,
                     distanceFilter: 30,
                     debug: false // <-- enable this hear sounds for background-geolocation life-cycle.
                 });
