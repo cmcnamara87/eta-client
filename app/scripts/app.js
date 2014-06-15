@@ -18,8 +18,9 @@ angular.module('etaApp', [
     $rootScope.isLoggedIn = true;
 
     $ionicPlatform.ready(function() {
+        console.log('got to here!! ======');
         console.log('plugins', window.plugins);
-        console.log('ENV IS', ENV.name);
+        console.log('ENV IS TEST', ENV.name);
 
         if (ENV.name === 'phone') {
             analytics.startTrackerWithId('UA-51312192-1');
@@ -54,7 +55,7 @@ angular.module('etaApp', [
 
 }).config(function($stateProvider, $urlRouterProvider, RestangularProvider, ENV) {
 
-    RestangularProvider.addElementTransformer('users', false, function(user) {
+    RestangularProvider.addElementTransformer('users', function(user) {
         // This will add a method called login that will do a POST to the path login
         // signature is (name, operation, path, params, headers, elementToPost)
         user.addRestangularMethod('login', 'post', 'login');
@@ -63,7 +64,7 @@ angular.module('etaApp', [
         user.addRestangularMethod('request', 'post', 'request');
         return user;
     });
-    RestangularProvider.addElementTransformer('contacts', false, function(contact) {
+    RestangularProvider.addElementTransformer('contacts', function(contact) {
         // This will add a method called login that will do a POST to the path login
         // signature is (name, operation, path, params, headers, elementToPost)
         contact.addRestangularMethod('accept', 'post', 'accept');
@@ -113,6 +114,15 @@ angular.module('etaApp', [
                 'tab-contacts': {
                     templateUrl: 'templates/contacts-findbyname.html',
                     controller: 'ContactsFindByNameCtrl'
+                }
+            }
+        })
+        .state('tab.contacts-findfromcontacts', {
+            url: '/contacts/find-from-contacts',
+            views: {
+                'tab-contacts': {
+                    templateUrl: 'templates/contacts-findfromcontacts.html',
+                    controller: 'ContactsFindFromContactsCtrl'
                 }
             }
         })

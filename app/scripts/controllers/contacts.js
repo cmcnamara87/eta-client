@@ -7,6 +7,7 @@ angular.module('etaApp')
             'AngularJS',
             'Karma'
         ];
+        console.log('=== cotnacts controller!!');
 
         $scope.contacts = (Contacts.contacts = Contacts.contacts || []);
 

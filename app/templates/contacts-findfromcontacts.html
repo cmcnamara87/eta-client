@@ -1,0 +1,14 @@
+<ion-view title="Contacts">
+    <ion-content has-header="true">
+        <!-- <pre>
+    		{{ people | json }}
+    	</pre>
+ -->
+        <ion-list>
+            <ion-item ng-repeat="person in people" class="item item-avatar item-button-right">
+                <h2>{{ person.name.formatted }}</h2>
+                <p>{{ person.address.country }}</p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

@@ -23,6 +23,7 @@
         "angular": false,
         "StatusBar": false,
         "analytics": false,
-        "ionic": false
+        "ionic": false,
+        "ContactFindOptions": false
     }
 }
