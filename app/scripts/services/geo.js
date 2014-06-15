@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('etaApp')
-    .factory('Geo', function($q, Restangular, $rootScope) {
+    .factory('Geo', function($q, Restangular, $rootScope, ENV) {
         // Service logic
         // ...
 
@@ -66,7 +66,7 @@ angular.module('etaApp')
                 bgGeo = window.plugins.backgroundGeoLocation;
                 // HTTP POST params sent to your server when persisting locations.
                 bgGeo.configure(callbackFn, failureFn, {
-                    url: 'http://only.for.android.com/update_location.json', // <-- only required for Android; ios allows javascript callbacks for your http
+                    url: ENV.baseUrl + '/me/locations', // <-- only required for Android; ios allows javascript callbacks for your http
                     // params: {
                     //     'auth_token': 'user_secret_auth_token'
                     //     foo: 'bar'
